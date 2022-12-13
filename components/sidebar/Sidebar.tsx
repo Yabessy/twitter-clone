@@ -37,7 +37,7 @@ export default function Sidebar() {
       </div>
       {/* Button */}
       <div>
-        <button className="bg-blue-400 text-white rounded-full w-56 h-12 font-bold shadow hover:brightness-75 text-lg hidden xl:inline">
+        <button className="bg-blue-400 text-white rounded-full w-56 h-12 font-bold shadow hover:brightness-95 text-lg hidden xl:inline">
           Tweet
         </button>
       </div>
@@ -45,7 +45,7 @@ export default function Sidebar() {
       <div className="hoverEffect text-gray-700 flex items-center justify-center xl:justify-start mt-auto">
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/2048px-Circle-icons-profile.svg.png"
-          alt=""
+          alt="UserImg"
           className="w-10 h-10 rounded-full xl:mr-2 "
         />
         <div className="leading-5 hidden xl:inline  ">

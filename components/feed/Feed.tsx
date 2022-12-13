@@ -1,4 +1,5 @@
-import { SparklesIcon } from "@heroicons/react/24/outline";
+import { SparklesIcon } from "@heroicons/react/24/outline"
+import FeedInput from "./FeedInput"
 
 export default function Feed() {
   return (
@@ -6,9 +7,10 @@ export default function Feed() {
       <div className="flex items-center py-2 px-3 top-0 sticky z-10 bg-white border-b border-gray-200">
         <h2 className="text-lg sm:text-xl font-bold cursor-pointer">Home</h2>
         <div className="hoverEffect flex items-center justify-center ml-auto">
-        <SparklesIcon className="h-5"/>
+          <SparklesIcon className="h-5" />
         </div>
       </div>
+      <FeedInput />
     </div>
   )
 }
