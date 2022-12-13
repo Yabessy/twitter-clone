@@ -9,7 +9,7 @@ import {
 
 export default function FeedPost({ post }: any) {
   return (
-    <div className="flex w-full px-10 py-3 cursor-pointer border-b border-gray-200">
+    <div className="flex w-full pl-3 pr-10 py-3 cursor-pointer border-b border-gray-200">
       {/* userProfileImg */}
       <img src={post.userProfileImg} alt="userProfileImg" className="w-10 h-10 rounded-full mt-2 mr-4" />
       {/* right side */}
@@ -29,10 +29,10 @@ export default function FeedPost({ post }: any) {
         <p className="text-gray-800 text-base mb-2">{post.text}</p>
 
         {/* post img */}
-        <img className="rounded-2xl mr-2 w-full" src={post.image} alt="postImg" />
+        <img className="rounded-xl w-full object-contain" src={post.image} alt="postImg" />
 
         {/* icons */}
-        <div className="flex justify-between text-gray-500 p-2">
+        <div className="flex justify-between text-gray-500 p-2 mt-1">
           <ChatBubbleLeftIcon className="w-9 h-9 hoverEffect p-1 hover:text-sky-500 hover:bg-sky-100" />
           <TrashIcon className="w-9 h-9 hoverEffect p-1 hover:text-red-500 hover:bg-red-100" />
           <HeartIcon className="w-9 h-9 hoverEffect p-1 hover:text-red-500 hover:bg-red-100" />
