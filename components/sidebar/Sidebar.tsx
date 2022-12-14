@@ -25,7 +25,7 @@ export default function Sidebar() {
         />
       </div>
       {/* Menu */}
-      <div className="mt-4 xl:items-start">
+      <div className="mt-2 xl:items-start">
         <SidebarMenuItem text="Home" Icon={HomeIcon} active />
         <SidebarMenuItem text="Explore" Icon={HashtagIcon} />
         <SidebarMenuItem text="Notification" Icon={BellIcon} />
@@ -52,8 +52,9 @@ export default function Sidebar() {
           <h4 className="font-bold">Imanul Vernanda</h4>
           <p className="text-gray-400">@Imanul</p>
         </div>
-        <EllipsisHorizontalIcon className="w-6 h-6 xl:ml-8 hidden xl:inline"  />
+        <EllipsisHorizontalIcon className="w-6 h-6 xl:ml-8 hidden xl:inline" />
       </div>
     </div>
   )
 }
+
