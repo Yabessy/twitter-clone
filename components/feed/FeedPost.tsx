@@ -53,7 +53,8 @@ export default function FeedPost({ post, id }: any) {
     // @ts-ignore
     setLiked(likes.findIndex((like) => like.id === currentUser?.uid) !== -1)
   }, [likes])
-  async function likeTweet() {
+  async function likeTweet(e:any) {
+    e.stopPropagation()
     if (!currentUser) {
       router.push("/signin")
       return
@@ -156,12 +157,12 @@ export default function FeedPost({ post, id }: any) {
           <div className="flex">
             {liked ? (
               <FilledHeartIcon
-                onClick={() => likeTweet()}
+                onClick={(e) => likeTweet(e)}
                 className="w-9 h-9 hoverEffect p-1 text-red-500 hover:text-red-500 hover:bg-red-100"
               />
             ) : (
               <HeartIcon
-                onClick={() => likeTweet()}
+                onClick={(e) => likeTweet(e)}
                 className="w-9 h-9 hoverEffect p-1 hover:text-red-500 hover:bg-red-100"
               />
             )}
