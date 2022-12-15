@@ -8,6 +8,7 @@
   "dependencies": {
     "@heroicons/react": "^2.0.13",
     "firebase": "^9.15.0",
+    "framer-motion": "^7.9.1",
     "moment": "^2.29.4",
     "next": "latest",
     "react": "18.2.0",

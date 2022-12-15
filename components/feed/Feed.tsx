@@ -1,5 +1,6 @@
 import { SparklesIcon } from "@heroicons/react/24/outline"
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore"
+import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { db } from "../../firebase"
 import FeedInput from "./FeedInput"
@@ -25,10 +26,19 @@ export default function Feed() {
         </div>
       </div>
       <FeedInput />
-      {posts.map((post) => (
-        // @ts-ignore
-        <FeedPost key={post.id} post={post} />
-      ))}
+      <AnimatePresence>
+        {posts.map((post) => (
+          <motion.div
+            // @ts-ignore
+            key={post.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}>
+            <FeedPost post={post} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   )
 }
