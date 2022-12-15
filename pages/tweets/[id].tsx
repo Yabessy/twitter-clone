@@ -1,18 +1,27 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline"
 import { onAuthStateChanged } from "firebase/auth"
-import { getDoc, doc, onSnapshot } from "firebase/firestore"
+import {
+  getDoc,
+  doc,
+  onSnapshot,
+  query,
+  collection,
+  orderBy
+} from "firebase/firestore"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useRecoilState } from "recoil"
 import { CommentModal, Sidebar, Widgets } from "../../components"
 import { userState } from "../../components/atom/userAtom"
+import FeedComment from "../../components/feed/FeedComment"
 import FeedPost from "../../components/feed/FeedPost"
 import { auth, db } from "../../firebase"
 
 const Tweet = ({ newsResults, userResults }: any) => {
   const [currentUser, setCurrentUser] = useRecoilState(userState)
   const [post, setPost] = useState()
+  const [comments, setComments] = useState([])
   const router = useRouter()
   const { id } = router.query
   useEffect(
@@ -20,6 +29,17 @@ const Tweet = ({ newsResults, userResults }: any) => {
     () => onSnapshot(doc(db, "tweets", id), (snapshot) => setPost(snapshot)),
     [db, id]
   )
+  useEffect(() => {
+    onSnapshot(
+      query(
+        // @ts-ignore
+        collection(db, "tweets", id, "comments"),
+        orderBy("timestamp", "desc")
+      ),
+      // @ts-ignore
+      (snapshot) => setComments(snapshot.docs)
+    )
+  }, [db, id])
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       const uid = auth.currentUser?.uid
@@ -57,6 +77,17 @@ const Tweet = ({ newsResults, userResults }: any) => {
             </h2>
           </div>
           <FeedPost key={id} id={id} post={post} />
+          {comments.length > 0 && (
+            <>
+              {comments.map((comment: any) => (
+                <FeedComment
+                  key={comment.id}
+                  id={comment.id}
+                  comment={comment.data()}
+                />
+              ))}
+            </>
+          )}
         </div>
         <Widgets
           newsResults={newsResults.articles}
