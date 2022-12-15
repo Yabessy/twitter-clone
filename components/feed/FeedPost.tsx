@@ -25,7 +25,7 @@ import Image from "next/image"
 import { deleteObject, ref } from "firebase/storage"
 import { commentModalState, postIdState } from "../atom/modalState"
 
-export default function FeedPost({ post }: any) {
+export default function FeedPost({ post, id }: any) {
   const router = useRouter()
   const [currentUser] = useRecoilState(userState)
   const [likes, setLikes] = useState([])
@@ -35,7 +35,7 @@ export default function FeedPost({ post }: any) {
   const [postId, setPostIdState] = useRecoilState(postIdState)
   useEffect(() => {
     const unsub = onSnapshot(
-      collection(db, "tweets", post.id, "likes"),
+      collection(db, "tweets", id, "likes"),
       (snapshot: any) => {
         setLikes(snapshot.docs)
       }
@@ -43,7 +43,7 @@ export default function FeedPost({ post }: any) {
   }, [db])
   useEffect(() => {
     const unsub = onSnapshot(
-      collection(db, "tweets", post.id, "comments"),
+      collection(db, "tweets", id, "comments"),
       (snapshot: any) => {
         setComments(snapshot.docs)
       }
@@ -60,10 +60,10 @@ export default function FeedPost({ post }: any) {
     } else {
       if (liked) {
         // @ts-ignore
-        await deleteDoc(doc(db, "tweets", post.id, "likes", currentUser?.uid))
+        await deleteDoc(doc(db, "tweets", id, "likes", currentUser?.uid))
       } else {
         // @ts-ignore
-        await setDoc(doc(db, "tweets", post.id, "likes", currentUser?.uid), {
+        await setDoc(doc(db, "tweets", id, "likes", currentUser?.uid), {
           // @ts-ignore
           username: currentUser?.username
         })
@@ -72,17 +72,18 @@ export default function FeedPost({ post }: any) {
   }
   async function deletePost() {
     if (window.confirm("Are you sure you want to delete this post?")) {
-      await deleteDoc(doc(db, "tweets", post.id))
+      await deleteDoc(doc(db, "tweets", id))
       if (post.data().image) {
-        await deleteObject(ref(storage, `tweets/${post.id}/image`))
+        await deleteObject(ref(storage, `tweets/${id}/image`))
       }
+      router.push("/")
     }
   }
   return (
     <div className="flex w-full pl-3 pr-10 py-3 cursor-pointer border-b border-gray-200">
       {/* userProfileImg */}
       <img
-        src={post.data().userImg}
+        src={post?.data()?.userImg}
         alt="user"
         referrerPolicy="no-referrer"
         className="w-10 h-10 rounded-full mt-2 mr-4"
@@ -94,13 +95,13 @@ export default function FeedPost({ post }: any) {
           {/* userInfo */}
           <div className="flex space-x-1 items-center whitespace-nowrap">
             <h4 className="font-bold text-base hover:underline">
-              {post.data().displayName}
+              {post?.data()?.name}
             </h4>
-            <p className="text-sm sm:text-base">@{post.data().username} - </p>
+            <p className="text-sm sm:text-base">@{post?.data()?.username} - </p>
             <span className="text-sm sm:text-base hover:underline">
               <Moment fromNow>
-                {post.data().timestamp !== null
-                  ? post.data().timestamp.toDate()
+                {post?.data()?.timestamp !== null
+                  ? post?.data()?.timestamp.toDate()
                   : new Date()}
               </Moment>
             </span>
@@ -109,12 +110,12 @@ export default function FeedPost({ post }: any) {
           <EllipsisHorizontalIcon className="h-14 w-14 p-2 hoverEffect hover:bg-sky-100 hover:text-sky-500" />
         </div>
         {/* post text */}
-        <p className="text-gray-800 text-base mb-2">{post.data().text}</p>
+        <p className="text-gray-800 text-base mb-2">{post?.data()?.text}</p>
 
         {/* post img */}
         <img
           className="rounded-xl w-full object-contain"
-          src={post.data().image}
+          src={post?.data()?.image}
           alt="postImg"
         />
 
@@ -126,7 +127,7 @@ export default function FeedPost({ post }: any) {
                 if (!currentUser) {
                   router.push("/signin")
                 }
-                setPostIdState(post.id)
+                setPostIdState(id)
                 setOpen(!open)
               }}
               className="w-9 h-9 hoverEffect p-1 hover:text-sky-500 hover:bg-sky-100"
@@ -136,7 +137,7 @@ export default function FeedPost({ post }: any) {
             )}
           </div>
           {/* @ts-ignore */}
-          {currentUser?.uid === post.data().uid && (
+          {currentUser?.uid === post?.data()?.uid && (
             <TrashIcon
               onClick={() => deletePost()}
               className="w-9 h-9 hoverEffect p-1 hover:text-red-500 hover:bg-red-100"

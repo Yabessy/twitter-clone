@@ -39,8 +39,11 @@ export default function CommentModal() {
   async function sendComment() {
     await addDoc(collection(db, "tweets", postId, "comments"), {
       comment: input,
+      // @ts-ignore
       name: currentUser?.name,
+      // @ts-ignore
       username: currentUser?.username,
+      // @ts-ignore
       userImg: currentUser?.userImg,
       timestamp: serverTimestamp()
     })
@@ -71,27 +74,33 @@ export default function CommentModal() {
               <div className="flex items-center space-x-1">
                 <span className="w-0.5 h-full bg-gray-200 z-[-1] absolute left-8 top-11" />
                 <img
+                  //  @ts-ignore
                   src={post?.data()?.userImg}
                   alt="user"
                   referrerPolicy="no-referrer"
                   className="w-10 h-10 rounded-full mt-2 mr-4"
                 />
                 <h4 className="font-bold text-base hover:underline">
+                  {/* @ts-ignore */}
                   {post?.data()?.displayName}
                 </h4>
                 <p className="text-sm sm:text-base">
+                  {/* @ts-ignore */}
                   @{post?.data()?.username} -{" "}
                 </p>
                 <span className="text-sm sm:text-base hover:underline">
                   <Moment fromNow>
+                    {/* @ts-ignore */}
                     {post?.data()?.timestamp !== null
-                      ? post?.data()?.timestamp.toDate()
+                      ? // @ts-ignore
+                        post?.data()?.timestamp.toDate()
                       : new Date()}
                   </Moment>
                 </span>
               </div>
               <p className="ml-16 text-gray-600 text-base mb-2">
-                {post.data().text}
+                {/* @ts-ignore */}
+                {post?.data()?.text}
               </p>
               {/* <img
                 className="ml-16 rounded-xl w-[75%] object-contain"

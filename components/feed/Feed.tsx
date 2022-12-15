@@ -35,7 +35,8 @@ export default function Feed() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}>
-            <FeedPost post={post} />
+            {/* @ts-ignore */}
+            <FeedPost id={post.id} post={post} />
           </motion.div>
         ))}
       </AnimatePresence>
