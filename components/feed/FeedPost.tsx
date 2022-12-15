@@ -61,7 +61,9 @@ export default function FeedPost({ post }: any) {
   async function deletePost() {
     if (window.confirm("Are you sure you want to delete this post?")) {
       await deleteDoc(doc(db, "tweets", post.id))
-      await deleteObject(ref(storage, `tweets/${post.id}/image`)).catch(() => {})
+      if (post.data().image) {
+        await deleteObject(ref(storage, `tweets/${post.id}/image`))
+      }
     }
   }
   return (
