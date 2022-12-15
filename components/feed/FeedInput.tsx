@@ -27,11 +27,15 @@ export default function FeedInput() {
     if (loading) return
     setLoading(true)
     const docRef = await addDoc(collection(db, "tweets"), {
+      // @ts-ignore
       uid: currentUser?.uid,
       text: input,
+      // @ts-ignore
       userImg: currentUser?.userImg,
       timestamp: serverTimestamp(),
+      // @ts-ignore
       name: currentUser?.name,
+      // @ts-ignore
       username: currentUser?.username
     })
     const imageRef = ref(storage, `tweets/${docRef.id}/image`)
@@ -53,6 +57,7 @@ export default function FeedInput() {
       reader.readAsDataURL(e.target.files[0])
     }
     reader.onload = (readerEvent) => {
+      // @ts-ignore
       setSelectedFile(readerEvent.target?.result)
     }
   }
@@ -95,6 +100,7 @@ export default function FeedInput() {
                   <div className="flex">
                     <div>
                       <PhotoIcon
+                        // @ts-ignore
                         onClick={() => filePickerRef.current.click()}
                         className="h-10 hoverEffect p-2 text-sky-500 hover:bg-sky-100"
                       />
