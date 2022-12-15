@@ -1,10 +1,10 @@
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth"
-import { getDoc,doc } from "firebase/firestore"
+import { getDoc, doc } from "firebase/firestore"
 import type { NextPage } from "next"
 import Head from "next/head"
 import { useEffect } from "react"
 import { useRecoilState } from "recoil"
-import { Feed, Sidebar, Widgets } from "../components"
+import { CommentModal, Feed, Sidebar, Widgets } from "../components"
 import { userState } from "../components/atom/userAtom"
 import { auth, db } from "../firebase"
 
@@ -40,6 +40,7 @@ const Home: NextPage = ({ newsResults, userResults }: any) => {
           newsResults={newsResults.articles}
           userResults={userResults.results}
         />
+        <CommentModal />
       </main>
     </div>
   )

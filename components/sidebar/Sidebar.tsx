@@ -66,6 +66,7 @@ export default function Sidebar() {
             // @ts-ignore
             src={currentUser?.userImg}
             alt="userImg"
+            referrerPolicy="no-referrer"
             className="w-10 h-10 rounded-full xl:mr-2 "
             onClick={() => onSignOut()}
           />

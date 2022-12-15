@@ -23,12 +23,15 @@ import { userState } from "../atom/userAtom"
 import { useRouter } from "next/router"
 import Image from "next/image"
 import { deleteObject, ref } from "firebase/storage"
+import { commentModalState, postIdState } from "../atom/modalState"
 
 export default function FeedPost({ post }: any) {
   const router = useRouter()
   const [currentUser] = useRecoilState(userState)
   const [likes, setLikes] = useState([])
   const [liked, setLiked] = useState(false)
+  const [open, setOpen] = useRecoilState(commentModalState)
+  const [postId, setPostIdState] = useRecoilState(postIdState)
   useEffect(() => {
     const unsub = onSnapshot(
       collection(db, "tweets", post.id, "likes"),
@@ -72,6 +75,7 @@ export default function FeedPost({ post }: any) {
       <img
         src={post.data().userImg}
         alt="user"
+        referrerPolicy="no-referrer"
         className="w-10 h-10 rounded-full mt-2 mr-4"
       />
       {/* right side */}
@@ -107,7 +111,16 @@ export default function FeedPost({ post }: any) {
 
         {/* icons */}
         <div className="flex justify-between text-gray-500 p-2 mt-1">
-          <ChatBubbleLeftIcon className="w-9 h-9 hoverEffect p-1 hover:text-sky-500 hover:bg-sky-100" />
+          <ChatBubbleLeftIcon
+            onClick={() => {
+              if (!currentUser) {
+                router.push("/signin")
+              }
+              setPostIdState(post.id)
+              setOpen(!open)
+            }}
+            className="w-9 h-9 hoverEffect p-1 hover:text-sky-500 hover:bg-sky-100"
+          />
           {/* @ts-ignore */}
           {currentUser?.uid === post.data().uid && (
             <TrashIcon
