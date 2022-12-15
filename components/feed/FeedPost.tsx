@@ -71,7 +71,8 @@ export default function FeedPost({ post, id }: any) {
       }
     }
   }
-  async function deletePost() {
+  async function deletePost(e:any) {
+    e.stopPropagation()
     if (window.confirm("Are you sure you want to delete this post?")) {
       await deleteDoc(doc(db, "tweets", id))
       if (post.data().image) {
@@ -150,7 +151,7 @@ export default function FeedPost({ post, id }: any) {
           {/* @ts-ignore */}
           {currentUser?.uid === post?.data()?.uid && (
             <TrashIcon
-              onClick={() => deletePost()}
+              onClick={(e) => deletePost(e)}
               className="w-9 h-9 hoverEffect p-1 hover:text-red-500 hover:bg-red-100"
             />
           )}
