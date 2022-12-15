@@ -8,6 +8,7 @@ import {
   collection,
   orderBy
 } from "firebase/firestore"
+import { AnimatePresence, motion } from "framer-motion"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -76,17 +77,34 @@ const Tweet = ({ newsResults, userResults }: any) => {
               Home
             </h2>
           </div>
-          <FeedPost key={id} id={id} post={post} />
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}>
+              <FeedPost key={id} id={id} post={post} />
+            </motion.div>
+          </AnimatePresence>
           {comments.length > 0 && (
             <>
-              {comments.map((comment: any) => (
-                <FeedComment
-                  key={comment.id}
-                  commentId={comment.id}
-                  orignialPostId={id}
-                  comment={comment.data()}
-                />
-              ))}
+              <AnimatePresence>
+                {comments.map((comment: any) => (
+                  <motion.div
+                    // @ts-ignore
+                    key={comment.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1 }}>
+                    <FeedComment
+                      commentId={comment.id}
+                      orignialPostId={id}
+                      comment={comment.data()}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </>
           )}
         </div>
