@@ -35,6 +35,7 @@ export default function CommentModal() {
     const unsub = onSnapshot(doc(db, "tweets", postId), (snapshot) => {
       setPost(snapshot)
     })
+    return unsub
   }, [postId, db])
   async function sendComment() {
     await addDoc(collection(db, "tweets", postId, "comments"), {
@@ -45,11 +46,13 @@ export default function CommentModal() {
       username: currentUser?.username,
       // @ts-ignore
       userImg: currentUser?.userImg,
-      timestamp: serverTimestamp()
+      timestamp: serverTimestamp(),
+      // @ts-ignore
+      uid: currentUser?.uid
     })
     setOpen(false)
     setInput("")
-    router.push(`/tweets/${postId}`)
+    router.push(`/tweet/${postId}`)
   }
   async function addImageToPost() {}
   return (
@@ -102,11 +105,6 @@ export default function CommentModal() {
                 {/* @ts-ignore */}
                 {post?.data()?.text}
               </p>
-              {/* <img
-                className="ml-16 rounded-xl w-[75%] object-contain"
-                src={post.data().image}
-                alt="postImg"
-              /> */}
             </div>
 
             {/* input */}
@@ -163,7 +161,7 @@ export default function CommentModal() {
                         <button
                           className="bg-blue-400 text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
                           disabled={!input.trim()}
-                          onClick={sendComment}>
+                          onClick={()=>sendComment()}>
                           Tweet
                         </button>
                       </>

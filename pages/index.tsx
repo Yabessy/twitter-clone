@@ -33,7 +33,7 @@ const Home: NextPage = ({ newsResults, userResults }: any) => {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-[1080px] max-w-7xl mx-auto ">
+      <main className="flex min-h-[1080px] max-w-[360px] sm:max-w-7xl mx-auto ">
         <Sidebar />
         <Feed />
         <Widgets

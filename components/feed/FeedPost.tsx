@@ -80,7 +80,9 @@ export default function FeedPost({ post, id }: any) {
     }
   }
   return (
-    <div className="flex w-full pl-3 pr-10 py-3 cursor-pointer border-b border-gray-200">
+    <div
+      onClick={() => router.push(`/tweet/${id}`)}
+      className="flex w-[355px] sm:w-full pl-3 pr-10 py-3 cursor-pointer border-b border-gray-200">
       {/* userProfileImg */}
       <img
         src={post?.data()?.userImg}
@@ -89,16 +91,16 @@ export default function FeedPost({ post, id }: any) {
         className="w-10 h-10 rounded-full mt-2 mr-4"
       />
       {/* right side */}
-      <div className="flex-1">
+      <div className="w-[270px] sm:w-auto sm:flex-1">
         {/* header */}
         <div className="flex items-center justify-between">
           {/* userInfo */}
-          <div className="flex space-x-1 items-center whitespace-nowrap">
+          <div className="flex flex-row space-x-1 items-center whitespace-nowrap">
             <h4 className="font-bold text-base hover:underline">
               {post?.data()?.name}
             </h4>
             <p className="text-sm sm:text-base">@{post?.data()?.username} - </p>
-            <span className="text-sm sm:text-base hover:underline">
+            <span className="hidden sm:inline text-sm sm:text-base hover:underline">
               <Moment fromNow>
                 {post?.data()?.timestamp !== null
                   ? post?.data()?.timestamp.toDate()
@@ -106,24 +108,32 @@ export default function FeedPost({ post, id }: any) {
               </Moment>
             </span>
           </div>
-          {/* dot icon */}
-          <EllipsisHorizontalIcon className="h-14 w-14 p-2 hoverEffect hover:bg-sky-100 hover:text-sky-500" />
         </div>
         {/* post text */}
+        <span className="inline sm:hidden text-sm sm:text-base hover:underline">
+          <Moment fromNow>
+            {post?.data()?.timestamp !== null
+              ? post?.data()?.timestamp.toDate()
+              : new Date()}
+          </Moment>
+        </span>
         <p className="text-gray-800 text-base mb-2">{post?.data()?.text}</p>
 
         {/* post img */}
-        <img
-          className="rounded-xl w-full object-contain"
-          src={post?.data()?.image}
-          alt="postImg"
-        />
+        {post?.data()?.image && (
+          <img
+            className="rounded-xl w-full object-contain"
+            src={post?.data()?.image}
+            alt="postImg"
+          />
+        )}
 
         {/* icons */}
-        <div className="flex justify-between text-gray-500 p-2 mt-1">
+        <div className="flex justify-start space-x-10 text-gray-500 p-2 mt-1">
           <div className="flex">
             <ChatBubbleLeftIcon
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation()
                 if (!currentUser) {
                   router.push("/signin")
                 }
@@ -165,7 +175,6 @@ export default function FeedPost({ post, id }: any) {
             )}
           </div>
           <ShareIcon className="w-9 h-9 hoverEffect p-1 hover:text-sky-500 hover:bg-sky-100" />
-          <ChartBarIcon className="w-9 h-9 hoverEffect p-1 hover:text-sky-500 hover:bg-sky-100" />
         </div>
       </div>
     </div>

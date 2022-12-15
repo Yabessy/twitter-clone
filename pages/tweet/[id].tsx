@@ -70,7 +70,7 @@ const Tweet = ({ newsResults, userResults }: any) => {
             <div
               className="hoverEffect p-1 mr-2"
               onClick={() => router.push("/")}>
-              <ArrowLeftIcon className="h-5" />
+              <ArrowLeftIcon className="h-5 mx-auto mt-3 lg:mx-0 lg:mt-0" />
             </div>
             <h2 className="text-lg sm:text-xl font-bold cursor-pointer">
               Home
@@ -82,7 +82,8 @@ const Tweet = ({ newsResults, userResults }: any) => {
               {comments.map((comment: any) => (
                 <FeedComment
                   key={comment.id}
-                  id={comment.id}
+                  commentId={comment.id}
+                  orignialPostId={id}
                   comment={comment.data()}
                 />
               ))}
