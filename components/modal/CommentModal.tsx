@@ -9,9 +9,16 @@ import {
 } from "@heroicons/react/24/outline"
 import { useEffect, useRef, useState } from "react"
 import { db } from "../../firebase"
-import { doc, onSnapshot } from "firebase/firestore"
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  serverTimestamp
+} from "firebase/firestore"
 import Moment from "react-moment"
 import { userState } from "../atom/userAtom"
+import { useRouter } from "next/router"
 
 export default function CommentModal() {
   const [open, setOpen] = useRecoilState(commentModalState)
@@ -22,13 +29,25 @@ export default function CommentModal() {
   const [selectedFile, setSelectedFile] = useState(null)
   const [loading, setLoading] = useState(false)
   const filePickerRef = useRef(null)
+  const router = useRouter()
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "tweets", postId), (snapshot) => {
       setPost(snapshot)
     })
   }, [postId, db])
-  async function sendComment() {}
+  async function sendComment() {
+    await addDoc(collection(db, "tweets", postId, "comments"), {
+      comment: input,
+      name: currentUser?.name,
+      username: currentUser?.username,
+      userImg: currentUser?.userImg,
+      timestamp: serverTimestamp()
+    })
+    setOpen(false)
+    setInput("")
+    router.push(`/tweets/${postId}`)
+  }
   async function addImageToPost() {}
   return (
     <div>

@@ -29,6 +29,7 @@ export default function FeedPost({ post }: any) {
   const router = useRouter()
   const [currentUser] = useRecoilState(userState)
   const [likes, setLikes] = useState([])
+  const [comments, setComments] = useState([])
   const [liked, setLiked] = useState(false)
   const [open, setOpen] = useRecoilState(commentModalState)
   const [postId, setPostIdState] = useRecoilState(postIdState)
@@ -37,6 +38,14 @@ export default function FeedPost({ post }: any) {
       collection(db, "tweets", post.id, "likes"),
       (snapshot: any) => {
         setLikes(snapshot.docs)
+      }
+    )
+  }, [db])
+  useEffect(() => {
+    const unsub = onSnapshot(
+      collection(db, "tweets", post.id, "comments"),
+      (snapshot: any) => {
+        setComments(snapshot.docs)
       }
     )
   }, [db])
@@ -79,7 +88,7 @@ export default function FeedPost({ post }: any) {
         className="w-10 h-10 rounded-full mt-2 mr-4"
       />
       {/* right side */}
-      <div className="w-full">
+      <div className="flex-1">
         {/* header */}
         <div className="flex items-center justify-between">
           {/* userInfo */}
@@ -111,16 +120,21 @@ export default function FeedPost({ post }: any) {
 
         {/* icons */}
         <div className="flex justify-between text-gray-500 p-2 mt-1">
-          <ChatBubbleLeftIcon
-            onClick={() => {
-              if (!currentUser) {
-                router.push("/signin")
-              }
-              setPostIdState(post.id)
-              setOpen(!open)
-            }}
-            className="w-9 h-9 hoverEffect p-1 hover:text-sky-500 hover:bg-sky-100"
-          />
+          <div className="flex">
+            <ChatBubbleLeftIcon
+              onClick={() => {
+                if (!currentUser) {
+                  router.push("/signin")
+                }
+                setPostIdState(post.id)
+                setOpen(!open)
+              }}
+              className="w-9 h-9 hoverEffect p-1 hover:text-sky-500 hover:bg-sky-100"
+            />
+            {comments.length > 0 && (
+              <span className="text-base font-bold">{comments.length}</span>
+            )}
+          </div>
           {/* @ts-ignore */}
           {currentUser?.uid === post.data().uid && (
             <TrashIcon
@@ -142,9 +156,9 @@ export default function FeedPost({ post }: any) {
             )}
             {likes.length > 0 && (
               <span
-                className={`text-base ${
+                className={`text-base font-bold ${
                   liked ? "text-red-500" : "text-gray-500"
-                } font-bold`}>
+                }`}>
                 {likes.length}
               </span>
             )}
