@@ -12,14 +12,17 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  serverTimestamp,
   setDoc
 } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import Moment from "react-moment"
 import { useRecoilState } from "recoil"
-import { db } from "../../firebase"
+import { db, storage } from "../../firebase"
 import { userState } from "../atom/userAtom"
 import { useRouter } from "next/router"
+import Image from "next/image"
+import { deleteObject, ref } from "firebase/storage"
 
 export default function FeedPost({ post }: any) {
   const router = useRouter()
@@ -55,11 +58,17 @@ export default function FeedPost({ post }: any) {
       }
     }
   }
+  async function deletePost() {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      await deleteDoc(doc(db, "tweets", post.id))
+      await deleteObject(ref(storage, `tweets/${post.id}/image`)).catch(() => {})
+    }
+  }
   return (
     <div className="flex w-full pl-3 pr-10 py-3 cursor-pointer border-b border-gray-200">
       {/* userProfileImg */}
       <img
-        src={post.data().userProfileImg}
+        src={post.data().userImg}
         alt="user"
         className="w-10 h-10 rounded-full mt-2 mr-4"
       />
@@ -74,7 +83,11 @@ export default function FeedPost({ post }: any) {
             </h4>
             <p className="text-sm sm:text-base">@{post.data().username} - </p>
             <span className="text-sm sm:text-base hover:underline">
-              <Moment fromNow>{post.data().timestamp.toDate()}</Moment>
+              <Moment fromNow>
+                {post.data().timestamp !== null
+                  ? post.data().timestamp.toDate()
+                  : new Date()}
+              </Moment>
             </span>
           </div>
           {/* dot icon */}
@@ -93,7 +106,13 @@ export default function FeedPost({ post }: any) {
         {/* icons */}
         <div className="flex justify-between text-gray-500 p-2 mt-1">
           <ChatBubbleLeftIcon className="w-9 h-9 hoverEffect p-1 hover:text-sky-500 hover:bg-sky-100" />
-          <TrashIcon className="w-9 h-9 hoverEffect p-1 hover:text-red-500 hover:bg-red-100" />
+          {/* @ts-ignore */}
+          {currentUser?.uid === post.data().uid && (
+            <TrashIcon
+              onClick={() => deletePost()}
+              className="w-9 h-9 hoverEffect p-1 hover:text-red-500 hover:bg-red-100"
+            />
+          )}
           <div className="flex">
             {liked ? (
               <FilledHeartIcon
